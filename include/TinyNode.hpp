@@ -124,6 +124,11 @@ namespace tiny_geode {
 				return node->getChildByTag(tag);
 			});
 
+			bindFunction<"id(Node, str): Node">([=](CCNode* node, std::string id) -> CCNode* {
+				node->setID(id);
+				return node;
+			});
+
 			bindFunction<"visible(Node, bool): Node">([=](CCNode* node, bool vis) -> CCNode* {
 				node->setVisible(vis);
 				return node;
