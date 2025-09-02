@@ -1,6 +1,6 @@
-# TinyGeode
+# UIScripter
 
-Hot-reloadable UI scripting using [Tiny](https://github.com/goodpaul6/Tiny). Check out the example for how to incorporate.
+Hot-reloadable UI scripting using the embedded language [Tiny](https://github.com/goodpaul6/Tiny). Check out the example for how to incorporate.
 
 # Docs
 

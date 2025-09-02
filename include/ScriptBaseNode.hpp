@@ -7,7 +7,7 @@ extern "C" {
 
 using namespace geode::prelude;
 
-namespace tiny_geode {
+namespace uiscripter {
 	template <typename T>
 	struct tiny_converter;
 
@@ -114,7 +114,7 @@ namespace tiny_geode {
 	template<unsigned N> TemplateStr(char const (&)[N]) -> TemplateStr<N - 1>;
 
 
-	class TinyBaseNode : public CCNode {
+	class ScriptBaseNode : public CCNode {
 	 	inline static std::set<const Tiny_State*> states;
 
 		template <TemplateStr name, typename R, typename ...Args>
@@ -150,8 +150,8 @@ namespace tiny_geode {
 	 	Tiny_State* m_state;
 	 	Tiny_StateThread m_thread;
 	 public:
-		inline static TinyBaseNode* create() {
-			auto pRet = new TinyBaseNode();
+		inline static ScriptBaseNode* create() {
+			auto pRet = new ScriptBaseNode();
 			
 			if (pRet && pRet->CCNode::init()) {
 				if (pRet->init()) {
@@ -164,7 +164,7 @@ namespace tiny_geode {
 			return NULL;
 		}
 
-		inline ~TinyBaseNode() {
+		inline ~ScriptBaseNode() {
 			states.erase(m_state);
 			Tiny_DestroyThread(&m_thread);
 			Tiny_DeleteState(m_state);
@@ -226,4 +226,4 @@ namespace tiny_geode {
 	};
 }
 
-using tiny_geode::TinyBaseNode;
+using uiscripter::ScriptBaseNode;

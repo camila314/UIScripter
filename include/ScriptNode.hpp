@@ -1,14 +1,14 @@
-#include "TinyBaseNode.hpp"
+#include "ScriptBaseNode.hpp"
 #include <UIBuilder.hpp>
 
-namespace tiny_geode {
+namespace uiscripter {
 
-	class TinyNode : public TinyBaseNode {
+	class ScriptNode : public ScriptBaseNode {
 		CCMenu* m_menu;
 		CCArray* m_nodeBinds;
 	public:
-		static TinyNode* create(std::string const& code) {
-			auto ret = new TinyNode();
+		static ScriptNode* create(std::string const& code) {
+			auto ret = new ScriptNode();
 			if (ret && ret->init(code)) {
 				ret->autorelease();
 				return ret;
@@ -19,7 +19,7 @@ namespace tiny_geode {
 			}
 		}
 
-		inline ~TinyNode() {
+		inline ~ScriptNode() {
 			m_nodeBinds->release();
 		}
 
@@ -29,19 +29,19 @@ namespace tiny_geode {
 		}
 
 		inline void bindConstructors() {
-			bindFunction<"Node(): Node">([=]() -> auto {
+			bindFunction<"Node(): Node">([this]() -> auto {
 				auto node = CCNode::create();
 				this->addChild(node);
 				return node;
 			});
 
-			bindFunction<"Label(str, str): Node">([=](std::string text, std::string font) -> auto {
+			bindFunction<"Label(str, str): Node">([this](std::string text, std::string font) -> auto {
 				auto lab = CCLabelBMFont::create(text.c_str(), font.c_str());
 				this->addChild(lab);
 				return lab;
 			});
 
-			bindFunction<"Sprite(str): Node">([=](std::string name) -> auto {
+			bindFunction<"Sprite(str): Node">([this](std::string name) -> auto {
 				auto spr = CCSprite::createWithSpriteFrameName(name.c_str());
 
 				// because textureldr wants to be silly
@@ -60,7 +60,7 @@ namespace tiny_geode {
 				return spr;
 			});
 
-			bindFunction<"WebSprite(str): Node">([=](std::string url) -> auto {
+			bindFunction<"WebSprite(str): Node">([this](std::string url) -> auto {
 				auto req = utils::web::WebRequest().get(url);
 				while (req.isPending()) {}
 
@@ -81,18 +81,18 @@ namespace tiny_geode {
 				return spr;
 			});
 
-			bindFunction<"Button(Node, str): Node">([=](CCSprite* sprite, std::string callback) -> auto {
+			bindFunction<"Button(Node, str): Node">([this](CCSprite* sprite, std::string callback) -> auto {
 				auto pos = sprite->getPosition();
 				sprite->removeFromParent();
 
-				auto btn = Build(sprite).intoMenuItem([=]() {
+				auto btn = Build(sprite).intoMenuItem([=, this]() {
 					this->runFunction<void>(callback);
 				}).pos(pos).parent(m_menu).collect();
 
 				return btn;
 			});
 
-			bindFunction<"ButtonSprite(str, str): Node">([=](std::string name, std::string sprite) -> auto {
+			bindFunction<"ButtonSprite(str, str): Node">([this](std::string name, std::string sprite) -> auto {
 				auto lbl = CCLabelBMFont::create(name.c_str(), "bigFont.fnt");
 				lbl->setScale(0.7);
 				auto spr = extension::CCScale9Sprite::create(sprite.c_str(), CCRectZero);
@@ -103,7 +103,7 @@ namespace tiny_geode {
 				return spr;
 			});
 
-			bindFunction<"Scale9Sprite(float, float, str): Node">([=](float w, float h, std::string name) -> auto {
+			bindFunction<"Scale9Sprite(float, float, str): Node">([this](float w, float h, std::string name) -> auto {
 				auto spr = extension::CCScale9Sprite::create(name.c_str(), CCRectZero);
 				if (spr == nullptr)
 					spr = extension::CCScale9Sprite::create("GJ_square01.png", CCRectZero);
@@ -116,120 +116,120 @@ namespace tiny_geode {
 		}
 
 		inline void bindNodeFns() {
-			bindFunction<"tag(Node, int): Node">([=](CCNode* node, int tag) -> CCNode* {
+			bindFunction<"tag(Node, int): Node">([this](CCNode* node, int tag) -> CCNode* {
 				node->setTag(tag);
 				return node;
 			});
-			bindFunction<"fetch(Node, int): Node">([=](CCNode* node, int tag) -> CCNode* {
+			bindFunction<"fetch(Node, int): Node">([this](CCNode* node, int tag) -> CCNode* {
 				return node->getChildByTag(tag);
 			});
 
-			bindFunction<"id(Node, str): Node">([=](CCNode* node, std::string id) -> CCNode* {
+			bindFunction<"id(Node, str): Node">([this](CCNode* node, std::string id) -> CCNode* {
 				node->setID(id);
 				return node;
 			});
 
-			bindFunction<"visible(Node, bool): Node">([=](CCNode* node, bool vis) -> CCNode* {
+			bindFunction<"visible(Node, bool): Node">([this](CCNode* node, bool vis) -> CCNode* {
 				node->setVisible(vis);
 				return node;
 			});
 
-			bindFunction<"pos(Node, float, float): Node">([=](CCNode* node, float x, float y) -> CCNode* {
+			bindFunction<"pos(Node, float, float): Node">([this](CCNode* node, float x, float y) -> CCNode* {
 				node->setPosition({x, y});
 				return node;
 			});
-			bindFunction<"xpos(Node, float): Node">([=](CCNode* node, float x) -> CCNode* {
+			bindFunction<"xpos(Node, float): Node">([this](CCNode* node, float x) -> CCNode* {
 				node->setPositionX(x);
 				return node;
 			});	
-			bindFunction<"ypos(Node, float): Node">([=](CCNode* node, float y) -> CCNode* {
+			bindFunction<"ypos(Node, float): Node">([this](CCNode* node, float y) -> CCNode* {
 				node->setPositionY(y);
 				return node;
 			});
-			bindFunction<"getX(Node): float">([=](CCNode* node) -> float {
+			bindFunction<"getX(Node): float">([this](CCNode* node) -> float {
 				return node->getPositionX();
 			});
-			bindFunction<"getY(Node): float">([=](CCNode* node) -> float {
+			bindFunction<"getY(Node): float">([this](CCNode* node) -> float {
 				return node->getPositionY();
 			});
-			bindFunction<"move(Node, float, float): Node">([=](CCNode* node, float x, float y) -> CCNode* {
+			bindFunction<"move(Node, float, float): Node">([this](CCNode* node, float x, float y) -> CCNode* {
 				node->setPosition(node->getPosition() + ccp(x, y));
 				return node;
 			});
 
-			bindFunction<"size(Node, float, float): Node">([=](CCNode* node, float w, float h) -> CCNode* {
+			bindFunction<"size(Node, float, float): Node">([this](CCNode* node, float w, float h) -> CCNode* {
 				node->setContentSize({w, h});
 				return node;
 			});
-			bindFunction<"width(Node, float): Node">([=](CCNode* node, float w) -> CCNode* {
+			bindFunction<"width(Node, float): Node">([this](CCNode* node, float w) -> CCNode* {
 				node->setContentSize({w, node->getContentSize().height});
 				return node;
 			});
-			bindFunction<"height(Node, float): Node">([=](CCNode* node, float h) -> CCNode* {
+			bindFunction<"height(Node, float): Node">([this](CCNode* node, float h) -> CCNode* {
 				node->setContentSize({node->getContentSize().width, h});
 				return node;
 			});
-			bindFunction<"getWidth(Node): float">([=](CCNode* node) -> float {
+			bindFunction<"getWidth(Node): float">([this](CCNode* node) -> float {
 				return node->getContentSize().width;
 			});
-			bindFunction<"getHeight(Node): float">([=](CCNode* node) -> float {
+			bindFunction<"getHeight(Node): float">([this](CCNode* node) -> float {
 				return node->getContentSize().height;
 			});
 
-			bindFunction<"scale(Node, float): Node">([=](CCNode* node, float scale) -> CCNode* {
+			bindFunction<"scale(Node, float): Node">([this](CCNode* node, float scale) -> CCNode* {
 				node->setScale(scale);
 				return node;
 			});
-			bindFunction<"scaleX(Node, float): Node">([=](CCNode* node, float scale) -> CCNode* {
+			bindFunction<"scaleX(Node, float): Node">([this](CCNode* node, float scale) -> CCNode* {
 				node->setScaleX(scale);
 				return node;
 			});
-			bindFunction<"scaleY(Node, float): Node">([=](CCNode* node, float scale) -> CCNode* {
+			bindFunction<"scaleY(Node, float): Node">([this](CCNode* node, float scale) -> CCNode* {
 				node->setScaleY(scale);
 				return node;
 			});
-			bindFunction<"scaleBy(Node, float): Node">([=](CCNode* node, float scale) -> CCNode* {
+			bindFunction<"scaleBy(Node, float): Node">([this](CCNode* node, float scale) -> CCNode* {
 				node->setScale(node->getScale() * scale);
 				return node;
 			});
 
-			bindFunction<"rotate(Node, float): Node">([=](CCNode* node, float angle) -> CCNode* {
+			bindFunction<"rotate(Node, float): Node">([this](CCNode* node, float angle) -> CCNode* {
 				node->setRotation(angle);
 				return node;
 			});
-			bindFunction<"rotateBy(Node, float): Node">([=](CCNode* node, float angle) -> CCNode* {
+			bindFunction<"rotateBy(Node, float): Node">([this](CCNode* node, float angle) -> CCNode* {
 				node->setRotation(node->getRotation() + angle);
 				return node;
 			});
 
-			bindFunction<"z(Node, int): Node">([=](CCNode* node, int z) -> CCNode* {
+			bindFunction<"z(Node, int): Node">([this](CCNode* node, int z) -> CCNode* {
 				node->setZOrder(z);
 				return node;
 			});
-			bindFunction<"getZ(Node): int">([=](CCNode* node) -> int {
+			bindFunction<"getZ(Node): int">([this](CCNode* node) -> int {
 				return node->getZOrder();
 			});
 
-			bindFunction<"child(Node, Node): Node">([=](CCNode* parent, CCNode* child) -> CCNode* {
+			bindFunction<"child(Node, Node): Node">([this](CCNode* parent, CCNode* child) -> CCNode* {
 				child->removeFromParent();
 				parent->addChild(child);
 				return parent;
 			});
 
-			bindFunction<"runAction(Node, Action): Node">([=](CCNode* node, CCAction* action) -> CCNode* {
+			bindFunction<"runAction(Node, Action): Node">([this](CCNode* node, CCAction* action) -> CCNode* {
 				node->runAction(action);
 				return node;
 			});
 
-			bindFunction<"color(Node, int, int, int): Node">([=](CCNode* node, uint8_t r, uint8_t g, uint8_t b) -> CCNode* {
+			bindFunction<"color(Node, int, int, int): Node">([this](CCNode* node, uint8_t r, uint8_t g, uint8_t b) -> CCNode* {
 				if (auto rgba = typeinfo_cast<CCRGBAProtocol*>(node))
-					rgba->setColor({r, g, b});
+					rgba->setColor(ccc3(r, g, b));
 				else
 					log::error("Node does not support color");
 
 				return node;
 			});
-			bindFunction<"opacity(Node, int): void">([=](CCNode* node, uint8_t op) -> CCNode* {
+			bindFunction<"opacity(Node, int): void">([this](CCNode* node, uint8_t op) -> CCNode* {
 				if (auto rgba = typeinfo_cast<CCRGBAProtocol*>(node))
 					rgba->setOpacity(op);
 				else
@@ -237,7 +237,7 @@ namespace tiny_geode {
 
 				return node;
 			});
-			bindFunction<"text(Node, str): Node">([=](CCNode* node, std::string text) -> CCNode* {
+			bindFunction<"text(Node, str): Node">([this](CCNode* node, std::string text) -> CCNode* {
 				if (auto lab = typeinfo_cast<CCLabelBMFont*>(node))
 					lab->setString(text.c_str());
 				else
@@ -245,7 +245,7 @@ namespace tiny_geode {
 
 				return node;
 			});
-			bindFunction<"font(Node, str): Node">([=](CCNode* node, std::string font) -> CCNode* {
+			bindFunction<"font(Node, str): Node">([this](CCNode* node, std::string font) -> CCNode* {
 				auto fu = CCFileUtils::sharedFileUtils();
 
 				if (!fu->isFileExist(fu->fullPathForFilename(font.c_str(), false))) {
@@ -263,49 +263,49 @@ namespace tiny_geode {
 		}
 
 		inline void bindActionConstructors() {
-			bindFunction<"Sequence(Action, Action): Action">([=](CCFiniteTimeAction* action1, CCFiniteTimeAction* action2) -> CCAction* {
+			bindFunction<"Sequence(Action, Action): Action">([this](CCFiniteTimeAction* action1, CCFiniteTimeAction* action2) -> CCAction* {
 				return CCSequence::create(action1, action2);
 			});
 
-			bindFunction<"Delay(float): Action">([=](float time) -> CCAction* {
+			bindFunction<"Delay(float): Action">([this](float time) -> CCAction* {
 				return CCDelayTime::create(time);
 			});
 
-			bindFunction<"MoveTo(float, float, float): Action">([=](float time, float x, float y) -> CCAction* {
+			bindFunction<"MoveTo(float, float, float): Action">([this](float time, float x, float y) -> CCAction* {
 				return CCMoveTo::create(time, {x, y});
 			});
-			bindFunction<"MoveBy(float, float, float): Action">([=](float time, float x, float y) -> CCAction* {
+			bindFunction<"MoveBy(float, float, float): Action">([this](float time, float x, float y) -> CCAction* {
 				return CCMoveBy::create(time, {x, y});
 			});
 
-			bindFunction<"ScaleTo(float, float): Action">([=](float time, float scale) -> CCAction* {
+			bindFunction<"ScaleTo(float, float): Action">([this](float time, float scale) -> CCAction* {
 				return CCScaleTo::create(time, scale);
 			});
-			bindFunction<"ScaleBy(float, float): Action">([=](float time, float scale) -> CCAction* {
+			bindFunction<"ScaleBy(float, float): Action">([this](float time, float scale) -> CCAction* {
 				return CCScaleBy::create(time, scale);
 			});
 
-			bindFunction<"RotateTo(float, float): Action">([=](float time, float angle) -> CCAction* {
+			bindFunction<"RotateTo(float, float): Action">([this](float time, float angle) -> CCAction* {
 				return CCRotateTo::create(time, angle);
 			});
-			bindFunction<"RotateBy(float, float): Action">([=](float time, float angle) -> CCAction* {
+			bindFunction<"RotateBy(float, float): Action">([this](float time, float angle) -> CCAction* {
 				return CCRotateBy::create(time, angle);
 			});
 
-			bindFunction<"FadeTo(float, float): Action">([=](float time, float opacity) -> CCAction* {
+			bindFunction<"FadeTo(float, float): Action">([this](float time, float opacity) -> CCAction* {
 				return CCFadeTo::create(time, opacity);
 			});
-			bindFunction<"FadeBy(float, float): Action">([=](float time, float opacity) -> CCAction* {
+			bindFunction<"FadeBy(float, float): Action">([this](float time, float opacity) -> CCAction* {
 				return CCFadeTo::create(time, opacity);
 			});
 		}
 
 		inline void bindSpecial() {
-			bindFunction<"popup(str, str, str): void">([=](std::string title, std::string message, std::string button) -> void {
+			bindFunction<"popup(str, str, str): void">([this](std::string title, std::string message, std::string button) -> void {
 				FLAlertLayer::create(title.c_str(), message, button.c_str())->show();
 			});
 
-			bindFunction<"prompt(str, str, str): void">([=](std::string title, std::string placeholder, std::string callback) -> void {
+			bindFunction<"prompt(str, str, str): void">([this](std::string title, std::string placeholder, std::string callback) -> void {
 				auto alert = new FLAlertLayer();
 				alert->init(150);
 				alert->autorelease();
@@ -333,7 +333,7 @@ namespace tiny_geode {
 						.center();
 
 				Build<ButtonSprite>::create("Ok")
-					.intoMenuItem([=]() {
+					.intoMenuItem([=, this]() {
 						this->runFunction<void>(callback, static_cast<CCTextInputNode*>(alert->m_mainLayer->getChildByTag(1))->getString());
 						alert->removeFromParentAndCleanup(true);
 					})
@@ -343,7 +343,7 @@ namespace tiny_geode {
 				alert->show();
 			});
 
-			bindFunction<"terminate(): void">([=](CCNode* node) -> void {
+			bindFunction<"terminate(): void">([this](CCNode* node) -> void {
 				this->removeFromParentAndCleanup(true);
 			});
 
@@ -352,7 +352,7 @@ namespace tiny_geode {
 		}
 
 		inline bool init(std::string const& code) {
-			TinyBaseNode::init();
+			ScriptBaseNode::init();
 			m_menu = CCMenu::create();
 			m_menu->setPosition({0, 0});
 			this->addChild(m_menu);
@@ -378,4 +378,4 @@ namespace tiny_geode {
 	};
 }
 
-using tiny_geode::TinyNode;
+using uiscripter::ScriptNode;

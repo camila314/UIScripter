@@ -1,14 +1,14 @@
 {
-	"geode": "3.4.0",
+	"geode": "4.8.0",
 	"gd": {
-		"win": "2.206",
-		"android": "2.206",
-		"mac": "2.206",
-		"ios": "2.206"
+		"win": "2.207",
+		"android": "2.207",
+		"mac": "2.207",
+		"ios": "2.207"
 	},
-	"id": "camila314.tiny-geode-example",
-	"name": "TinyGeode Example",
+	"id": "camila314.uiscripter-example",
+	"name": "UIScripter Example",
 	"version": "v1.0.0",
 	"developer": "camila314",
-	"description": "Example with TinyGeode"
+	"description": "Example with UIScripter"
 }

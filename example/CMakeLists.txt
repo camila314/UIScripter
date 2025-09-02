@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
-project(TinyGeodeExample VERSION 1.0.0)
+project(UIScripterExample VERSION 1.0.0)
 
 # Set up the mod binary
 add_library(${PROJECT_NAME} SHARED
@@ -20,8 +20,8 @@ endif()
 
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
-add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/TinyGeode)
-target_link_libraries(${PROJECT_NAME} TinyGeode)
+add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/UIScripter)
+target_link_libraries(${PROJECT_NAME} UIScripter)
 
 # Set up dependencies, resources, and link Geode.
 setup_geode_mod(${PROJECT_NAME})
