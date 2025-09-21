@@ -46,7 +46,7 @@ namespace uiscripter {
 
 				// because textureldr wants to be silly
 				auto fr = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(name.c_str());
-				if (name != fr->getFrameName()) {
+				if (name != fr->m_strFrameName) {
 					spr = nullptr;
 				}
 
