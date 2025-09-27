@@ -29,6 +29,7 @@ func width(node: Node, width: float): Node // Sets the width of a node
 func height(node: Node, height: float): Node // Sets the height of a node
 func getWidth(node: Node): float // Gets the width of a node
 func getHeight(node: Node): float // Gets the height of a node
+func anchorPoint(node: Node, x: float, y: float): Node // Sets the anchor point of a node
 func scale(node: Node, scale: float): Node // Sets the scale of a node
 func scaleX(node: Node, scale: float): Node // Sets the x scale of a node
 func scaleY(node: Node, scale: float): Node // Sets the y scale of a node

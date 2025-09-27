@@ -45,10 +45,11 @@ namespace uiscripter {
 				auto spr = CCSprite::createWithSpriteFrameName(name.c_str());
 
 				// because textureldr wants to be silly
-				auto fr = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(name.c_str());
+				/*auto fr = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(name.c_str());
+				log::info("{} {}", fr->m_strFrameName, name);
 				if (name != fr->m_strFrameName) {
 					spr = nullptr;
-				}
+				}*/
 
 				if (spr == nullptr)
 					spr = CCSprite::create(name.c_str());
@@ -176,6 +177,11 @@ namespace uiscripter {
 				return node->getContentSize().height;
 			});
 
+			bindFunction<"anchorPoint(Node, float, float): Node">([this](CCNode* node, float x, float y) -> CCNode* {
+				node->setAnchorPoint({x, y});
+				return node;
+			});
+
 			bindFunction<"scale(Node, float): Node">([this](CCNode* node, float scale) -> CCNode* {
 				node->setScale(scale);
 				return node;
@@ -229,7 +235,7 @@ namespace uiscripter {
 
 				return node;
 			});
-			bindFunction<"opacity(Node, int): void">([this](CCNode* node, uint8_t op) -> CCNode* {
+			bindFunction<"opacity(Node, int): Node">([this](CCNode* node, uint8_t op) -> CCNode* {
 				if (auto rgba = typeinfo_cast<CCRGBAProtocol*>(node))
 					rgba->setOpacity(op);
 				else
