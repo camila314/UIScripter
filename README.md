@@ -44,6 +44,34 @@ func color(node: Node, r: int, g: int, b: int): Node // Sets the color of a node
 func opacity(node: Node, opacity: int): Node // Sets the opacity of a node
 func text(node: Node, text: str): Node // Sets the text of a node
 func font(node: Node, font: str): Node // Sets the font of a node
+func updateLayout(node: Node): Node // Updates the layout of a node
+
+func axis(layout: Layout, axis: int) // Sets the axis of the layout (0 = Row, 1 = Column)
+func align(layout: Layout, align: int) // Sets the main axis alignment of the layout (0 = Start, 1 = Center, 2 = End, 3 = Even, 3 = Between)
+func crossAlign(layout: Layout, align: int) // Sets the cross axis alignment of the layout
+func lineAlign(layout: Layout, align: int) // Sets the cross axis line alignment of the layout
+func gap(layout: Layout, gap: float) // Sets the gap between items in the layout
+func reverse(layout: Layout, rev: bool) // Sets whether the main axis is reversed
+func crossReverse(layout: Layout, rev: bool) // Sets whether the cross axis is reversed
+func autoScale(layout: Layout, autoscale: bool) // Sets whether the layout auto-scales its children to fit
+func crossGrow(layout: Layout, crossgrow: bool) // Sets whether the layout grows on the cross axis when overflowing
+func crossOverflow(layout: Layout, overflow: bool) // Sets whether the layout allows cross axis overflow
+func autoGrow(layout: Layout, grows: bool, min: float) // Sets whether the layout auto-grows on the main axis to fit all items in one line, with an optional minimum length
+func ignoreInvisible(layout: Layout, ignore: bool) // Sets whether the layout ignores invisible children
+
+func relativeScale(options: LayoutOptions, scale: float) // Sets the relative scale of the node in an auto-scaled layout
+func autoScale(options: LayoutOptions, override: bool, autoscale: bool) // Sets a potential override to the layout's auto-scale setting
+func length(options: LayoutOptions, override: bool, length: float) // Sets a potential override to the length of the node
+func prevGap(options: LayoutOptions, override: bool, gap: float) // Sets a potential override to the layout's gap before this node
+func nextGap(options: LayoutOptions, override: bool, gap: float) // Sets a potential override to the layout's gap after this node
+func breakLine(options: LayoutOptions, brk: bool) // Sets whether this node should always break into a new line in a growable layout
+func sameLine(options: LayoutOptions, same: bool) // Sets whether this node should always be on the same line as the previous node in a growable layout
+func scalePrio(options: LayoutOptions, prio: int) // Sets the scale priority of this node in an auto-scaled layout
+func crossAlign(options: LayoutOptions, override: bool, align: int) // Sets a potential override to the cross axis alignment of this node
+
+func anchor(options: LayoutOptions, anchor: int) // Sets the anchor point for this node in an anchor layout (0 = Center, 1 = TopLeft, 2 = Top, 3 = TopRight, 4 = Right, 5 = BottomRight, 6 = Bottom, 7 = BottomLeft, 8 = Left)
+func offset(options: LayoutOptions, x: float, y: float) // Sets the offset for this node in an anchor layout
+func setAnchorOpts(node: Node, anchor: int, x: float, y: float) // Sets both the anchor and offset for this node in an anchor layout
 
 func Sequence(action1: Action, action2: Action): Action // Creates a new sequence action
 func Delay(time: float): Action // Creates a new delay action

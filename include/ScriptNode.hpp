@@ -114,6 +114,24 @@ namespace uiscripter {
 				return spr;
 			});
 
+			bindFunction<"AxisLayout(): Layout">([this]() -> auto {
+				return AxisLayout::create();
+			});
+			bindFunction<"RowLayout(): Layout">([this]() -> auto {
+				return RowLayout::create();
+			});
+			bindFunction<"RowLayout(): Layout">([this]() -> auto {
+				return ColumnLayout::create();
+			});
+			bindFunction<"AnchorLayout(): Layout">([this]() -> auto {
+				return AnchorLayout::create();
+			});
+			bindFunction<"AxisLayoutOptions: LayoutOptions">([this]() -> auto {
+				return AxisLayoutOptions::create();
+			});
+			bindFunction<"AnchorLayoutOptions: LayoutOptions">([this]() -> auto {
+				return AnchorLayoutOptions::create();
+			});
 		}
 
 		inline void bindNodeFns() {
@@ -266,6 +284,184 @@ namespace uiscripter {
 
 				return node;
 			});
+
+			bindFunction<"updateLayout(Node): Node">([this](CCNode* node) -> CCNode* {
+				node->updateLayout();
+				return node;
+			});
+
+			bindFunction<"layout(Node, Layout): Node">([this](CCNode* node, Layout* layout) -> CCNode* {
+				node->setLayout(layout);
+				return node;
+			});
+		}
+
+		inline void bindLayoutFns() {
+			bindFunction<"axis(Layout, int)">([this](Layout* layout, int axis) -> Layout* {
+				if (auto axisLayout = typeinfo_cast<AxisLayout*>(layout))
+					axisLayout->setAxis(static_cast<Axis>(axis));
+				else
+					log::error("Layout does not support axis");
+				return layout;
+			});
+			bindFunction<"align(Layout, int)">([this](Layout* layout, int align) -> Layout* {
+				if (auto axisLayout = typeinfo_cast<AxisLayout*>(layout))
+					axisLayout->setAxisAlignment(static_cast<AxisAlignment>(align));
+				else
+					log::error("Layout does not support alignment");
+				return layout;
+			});
+			bindFunction<"crossAlign(Layout, int)">([this](Layout* layout, int align) -> Layout* {
+				if (auto axisLayout = typeinfo_cast<AxisLayout*>(layout))
+					axisLayout->setCrossAxisAlignment(static_cast<AxisAlignment>(align));
+				else
+					log::error("Layout does not support cross alignment");
+				return layout;
+			});
+			bindFunction<"lineAlign(Layout, int)">([this](Layout* layout, int align) -> Layout* {
+				if (auto axisLayout = typeinfo_cast<AxisLayout*>(layout))
+					axisLayout->setCrossAxisLineAlignment(static_cast<AxisAlignment>(align));
+				else
+					log::error("Layout does not support line alignment");
+				return layout;
+			});
+			bindFunction<"gap(Layout, float)">([this](Layout* layout, float gap) -> Layout* {
+				if (auto axisLayout = typeinfo_cast<AxisLayout*>(layout))
+					axisLayout->setGap(gap);
+				else
+					log::error("Layout does not support gap");
+				return layout;
+			});
+			bindFunction<"reverse(Layout, bool)">([this](Layout* layout, bool rev) -> Layout* {
+				if (auto axisLayout = typeinfo_cast<AxisLayout*>(layout))
+					axisLayout->setAxisReverse(rev);
+				else
+					log::error("Layout does not support reverse");
+				return layout;
+			});
+			bindFunction<"crossReverse(Layout, bool)">([this](Layout* layout, bool rev) -> Layout* {
+				if (auto axisLayout = typeinfo_cast<AxisLayout*>(layout))
+					axisLayout->setCrossAxisReverse(rev);
+				else
+					log::error("Layout does not support cross reverse");
+				return layout;
+			});
+			bindFunction<"autoScale(Layout, bool)">([this](Layout* layout, bool autoscale) -> Layout* {
+				if (auto axisLayout = typeinfo_cast<AxisLayout*>(layout))
+					axisLayout->setAutoScale(autoscale);
+				else
+					log::error("Layout does not support auto scale");
+				return layout;
+			});
+			bindFunction<"crossGrow(Layout, bool)">([this](Layout* layout, bool crossgrow) -> Layout* {
+				if (auto axisLayout = typeinfo_cast<AxisLayout*>(layout))
+					axisLayout->setGrowCrossAxis(crossgrow);
+				else
+					log::error("Layout does not support cross grow");
+				return layout;
+			});
+			bindFunction<"crossOverflow(Layout, bool)">([this](Layout* layout, bool overflow) -> Layout* {
+				if (auto axisLayout = typeinfo_cast<AxisLayout*>(layout))
+					axisLayout->setCrossAxisOverflow(overflow);
+				else
+					log::error("Layout does not support cross overflow");
+				return layout;
+			});
+			bindFunction<"autoGrow(Layout, bool, float)">([this](Layout* layout, bool grows, float min) -> Layout* {
+				if (auto axisLayout = typeinfo_cast<AxisLayout*>(layout))
+					axisLayout->setAutoGrowAxis(grows ? std::optional<float>(min) : std::nullopt);
+				else
+					log::error("Layout does not support auto grow");
+				return layout;
+			});
+			bindFunction<"ignoreInvisible(Layout, bool)">([this](Layout* layout, bool ignore) -> Layout* {
+				layout->ignoreInvisibleChildren(ignore);
+				return layout;
+			});
+			bindFunction<"relativeScale(LayoutOptions, float)">([this](LayoutOptions* options, float scale) -> LayoutOptions* {
+				if (auto axisOptions = typeinfo_cast<AxisLayoutOptions*>(options))
+					axisOptions->setRelativeScale(scale);
+				else
+					log::error("LayoutOptions does not support relative scale");
+				return options;
+			});
+			bindFunction<"autoScale(LayoutOptions, bool, bool)">([this](LayoutOptions* options, bool override, bool autoscale) -> LayoutOptions* {
+				if (auto axisOptions = typeinfo_cast<AxisLayoutOptions*>(options))
+					axisOptions->setAutoScale(override ? std::optional<bool>(autoscale) : std::nullopt);
+				else
+					log::error("LayoutOptions does not support auto scale");
+				return options;
+			});
+			bindFunction<"length(LayoutOptions, bool, float)">([this](LayoutOptions* options, bool override, float length) -> LayoutOptions* {
+				if (auto axisOptions = typeinfo_cast<AxisLayoutOptions*>(options))
+					axisOptions->setLength(override ? std::optional<float>(length) : std::nullopt);
+				else
+					log::error("LayoutOptions does not support length");
+				return options;
+			});
+			bindFunction<"prevGap(LayoutOptions, bool, float)">([this](LayoutOptions* options, bool override, float gap) -> LayoutOptions* {
+				if (auto axisOptions = typeinfo_cast<AxisLayoutOptions*>(options))
+					axisOptions->setPrevGap(override ? std::optional<float>(gap) : std::nullopt);
+				else
+					log::error("LayoutOptions does not support previous gap");
+				return options;
+			});
+			bindFunction<"nextGap(LayoutOptions, bool, float)">([this](LayoutOptions* options, bool override, float gap) -> LayoutOptions* {
+				if (auto axisOptions = typeinfo_cast<AxisLayoutOptions*>(options))
+					axisOptions->setNextGap(override ? std::optional<float>(gap) : std::nullopt);
+				else
+					log::error("LayoutOptions does not support next gap");
+				return options;
+			});
+			bindFunction<"breakLine(LayoutOptions, bool)">([this](LayoutOptions* options, bool brk) -> LayoutOptions* {
+				if (auto axisOptions = typeinfo_cast<AxisLayoutOptions*>(options))
+					axisOptions->setBreakLine(brk);
+				else
+					log::error("LayoutOptions does not support break line");
+				return options;
+			});
+			bindFunction<"sameLine(LayoutOptions, bool)">([this](LayoutOptions* options, bool same) -> LayoutOptions* {
+				if (auto axisOptions = typeinfo_cast<AxisLayoutOptions*>(options))
+					axisOptions->setSameLine(same);
+				else
+					log::error("LayoutOptions does not support same line");
+				return options;
+			});
+			bindFunction<"scalePrio(LayoutOptions, int)">([this](LayoutOptions* options, int prio) -> LayoutOptions* {
+				if (auto axisOptions = typeinfo_cast<AxisLayoutOptions*>(options))
+					axisOptions->setScalePriority(prio);
+				else
+					log::error("LayoutOptions does not support scale priority");
+				return options;
+			});
+			bindFunction<"crossAlign(LayoutOptions, bool, int)">([this](LayoutOptions* options, bool override, int align) -> LayoutOptions* {
+				if (auto axisOptions = typeinfo_cast<AxisLayoutOptions*>(options))
+					axisOptions->setCrossAxisAlignment(override ? std::optional<AxisAlignment>(static_cast<AxisAlignment>(align)) : std::nullopt);
+				else
+					log::error("LayoutOptions does not support cross alignment");
+				return options;
+			});
+			bindFunction<"anchor(LayoutOptions, int)">([this](LayoutOptions* options, int anchor) -> LayoutOptions* {
+				if (auto anchorOptions = typeinfo_cast<AnchorLayoutOptions*>(options))
+					anchorOptions->setAnchor(static_cast<Anchor>(anchor));
+				else
+					log::error("LayoutOptions does not support anchor");
+				return options;
+			});
+			bindFunction<"offset(LayoutOptions, float, float)">([this](LayoutOptions* options, float x, float y) -> LayoutOptions* {
+				if (auto anchorOptions = typeinfo_cast<AnchorLayoutOptions*>(options))
+					anchorOptions->setOffset({x, y});
+				else
+					log::error("LayoutOptions does not support offset");
+				return options;
+			});
+			bindFunction<"setAnchorOpts(Node, int, float, float)">([this](CCNode* node, int anchor, float x, float y) -> CCNode* {
+				auto options = AnchorLayoutOptions::create()
+					->setAnchor(static_cast<Anchor>(anchor))
+					->setOffset({x, y});
+				node->setLayoutOptions(options);
+				return node;
+			});
 		}
 
 		inline void bindActionConstructors() {
@@ -366,6 +562,8 @@ namespace uiscripter {
 			m_nodeBinds->retain();
 
 			registerType("Node");
+			registerType("Layout");
+			registerType("LayoutOptions");
 			registerType("Action");
 			bindConstructors();
 			bindActionConstructors();
