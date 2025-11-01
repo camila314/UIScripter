@@ -1,22 +1,13 @@
-func onText(txt: str) {
-	self->fetch(1)->text(txt)
-} 
-
-func btn() {
-	prompt("Enter Text", "Text", "onText")
-}
 
 func main() {
 	self_menu->z(999)
 
 	Scale9Sprite(200.0, 100.0, "GJ_square01.png")
-		->pos(0.0, 20.0)
 
-	Label("More Text", "bigFont.fnt")
-		->pos(0.0, 47.0)
-		->tag(1)
-		->scale(0.8)
-
-	Button(WebSprite("https://icreate.pro/assets/images/app-circle.png")->scale(0.3), "btn")
-		->pos(0.0, 5.0)
+	Node()
+		->layout(RowLayout()->autoGrow(true, 0.0)->gap(40.0))
+		->anchorPoint(0.5, 0.5)
+		->child(ButtonSprite("Yes", "GJ_button_01.png"))
+		->child(ButtonSprite("No", "GJ_button_01.png"))
+		->updateLayout()
 }

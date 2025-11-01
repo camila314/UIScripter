@@ -1,3 +1,4 @@
+#include "Geode/ui/Layout.hpp"
 #include <Geode/Geode.hpp>
 #include <Geode/utils/web.hpp>
 #include <ScriptNode.hpp>
@@ -24,7 +25,6 @@ class $modify(MenuLayer) {
 				last_check = last_write;
 
 				std::string code = utils::file::readString(file).unwrap();
-
 				if (auto node = uiscripter::ScriptNode::create(code)) {
 					this->removeChildByID("script-node");
 					node->setID("script-node");
